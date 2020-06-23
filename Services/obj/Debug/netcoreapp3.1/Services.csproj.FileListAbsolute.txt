@@ -1,0 +1,9 @@
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\Services.deps.json
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\Services.dll
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\Services.pdb
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.AssemblyInfoInputs.cache
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.AssemblyInfo.cs
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.csproj.CoreCompileInputs.cache
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.dll
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.pdb
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.csprojAssemblyReference.cache
