@@ -7,3 +7,8 @@ C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.cspr
 C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.dll
 C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.pdb
 C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.csprojAssemblyReference.cache
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\DAL.dll
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\Models.dll
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\DAL.pdb
+C:\Users\Work\source\repos\Salary\Services\bin\Debug\netcoreapp3.1\Models.pdb
+C:\Users\Work\source\repos\Salary\Services\obj\Debug\netcoreapp3.1\Services.csproj.CopyComplete
