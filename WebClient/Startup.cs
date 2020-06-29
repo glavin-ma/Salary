@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Models.Auth;
 using Models.Employment;
+using Services.Interfaces;
+using Services.Services;
 using WebClient.Classes;
 using WebClient.Interfaces;
 using WebClient.Mapping;
@@ -33,6 +35,7 @@ namespace WebClient
         {
             services.AddScoped(typeof(IDataContext), typeof(DataContext));
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddDefaultIdentity<Employee>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -81,11 +84,11 @@ namespace WebClient
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
-            services.AddSingleton(mappingConfig.CreateMapper());
+            //var mappingConfig = new MapperConfiguration(mc =>
+            //{
+            //    mc.AddProfile(new MappingProfile());
+            //});
+            services.AddAutoMapper(typeof(MappingProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

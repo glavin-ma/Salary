@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using DTO.Employment;
+using Models.Employment;
 
 namespace WebClient.Mapping
 {
@@ -10,9 +8,8 @@ namespace WebClient.Mapping
     {
         public MappingProfile()
         {
-            //// Add as many of these lines as you need to map your objects
-            //CreateMap<User, UserDto>();
-            //CreateMap<UserDto, User>();
+            CreateMap<Employee, EmployeeDto>()
+                .ForMember(a => a.FullName, a => a.MapFrom(b => $"{b.FirstName} {b.LastName}"));
         }
     }
 }

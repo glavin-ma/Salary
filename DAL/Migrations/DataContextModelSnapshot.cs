@@ -238,6 +238,12 @@ namespace DAL.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("BasicRate")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("BossId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
@@ -248,6 +254,9 @@ namespace DAL.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EmploymentDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
@@ -284,11 +293,16 @@ namespace DAL.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserName")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BossId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -297,7 +311,52 @@ namespace DAL.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Models.Employment.EmployeeType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("MaxAllowance")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("YearAllowance")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MaxAllowance = 30.0,
+                            Name = "Employee",
+                            YearAllowance = 3.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            MaxAllowance = 40.0,
+                            Name = "Manager",
+                            YearAllowance = 5.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            MaxAllowance = 35.0,
+                            Name = "Salesman",
+                            YearAllowance = 1.0
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -347,6 +406,19 @@ namespace DAL.Migrations
                     b.HasOne("Models.Employment.Employee", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.Employment.Employee", b =>
+                {
+                    b.HasOne("Models.Employment.Employee", "Boss")
+                        .WithMany("Dependant")
+                        .HasForeignKey("BossId");
+
+                    b.HasOne("Models.Employment.EmployeeType", "Type")
+                        .WithMany("Employees")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

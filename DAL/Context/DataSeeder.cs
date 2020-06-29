@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using DAL.Classes;
 using Microsoft.AspNetCore.Identity;
@@ -11,20 +13,33 @@ namespace DAL.Context
     {
         public static void Initialize(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<IdentityRole>().HasData(
-            //    new IdentityRole
-            //    {
-            //        Name = "Employee"
-            //    },
-            //    new IdentityRole
-            //    {
-            //        Name = "Manager"
-            //    },
-            //    new IdentityRole
-            //    {
-            //        Name = "Salesman"
-            //    }
-            //);
+            modelBuilder.Entity<Employee>().HasMany(p => p.Dependant)
+                .WithOne(p => p.Boss).IsRequired(false);
+            //modelBuilder.Entity<Employee>().HasOne(p => p.Type).WithMany(p => p.Employees).IsRequired();
+
+            modelBuilder.Entity<EmployeeType>().HasData(
+                new EmployeeType
+                {
+                    Id = 1,
+                    Name = "Employee",
+                    YearAllowance = 3,
+                    MaxAllowance = 30
+                },
+                new EmployeeType
+                {
+                    Id = 2,
+                    Name = "Manager",
+                    YearAllowance = 5,
+                    MaxAllowance = 40
+                },
+                new EmployeeType
+                {
+                    Id = 3,
+                    Name = "Salesman",
+                    YearAllowance = 1,
+                    MaxAllowance = 35
+                }
+            );
         }
 
         private class UserInfo
@@ -34,6 +49,9 @@ namespace DAL.Context
             public string LastName { get; set; }
             public string Password { get; set; }
             public string Role { get; set; }
+            public int EmployType { get; set; }
+            public double Rate { get; set; }
+            public int WorkingYears { get; set; }
         }
 
 
@@ -60,7 +78,10 @@ namespace DAL.Context
                     LastName = "Ivanov",
                     UserName = "superUser",
                     Password = "Test1123456789",
-                    Role = "Manager"
+                    Role = "Manager",
+                    EmployType = 2,
+                    Rate=10000,
+                    WorkingYears = 9
                 },
                 new UserInfo
                 {
@@ -68,7 +89,10 @@ namespace DAL.Context
                     LastName = "Petrov",
                     UserName = "Petrov",
                     Password = "test2",
-                    Role = "Manager"
+                    Role = "Manager",
+                    EmployType = 2,
+                    Rate=8000,
+                    WorkingYears = 5
                 },
                 new UserInfo
                 {
@@ -76,7 +100,10 @@ namespace DAL.Context
                     LastName = "Sidorovich",
                     UserName = "Sidor",
                     Password = "test3",
-                    Role = "Salesman"
+                    Role = "Salesman",
+                    EmployType = 3,
+                    Rate=6000,
+                    WorkingYears = 40
                 },
                 new UserInfo
                 {
@@ -84,7 +111,10 @@ namespace DAL.Context
                     LastName = "Olegov",
                     UserName = "Olegov",
                     Password = "test4",
-                    Role = "Salesman"
+                    Role = "Salesman",
+                    EmployType = 3,
+                    Rate=8000,
+                    WorkingYears = 10
                 },
                 new UserInfo
                 {
@@ -92,7 +122,10 @@ namespace DAL.Context
                     LastName = "Sidorovich",
                     UserName = "ISidor",
                     Password = "test5",
-                    Role = "Employee"
+                    Role = "Employee",
+                    EmployType = 1,
+                    Rate=5000,
+                    WorkingYears = 11
                 },
                 new UserInfo
                 {
@@ -100,7 +133,10 @@ namespace DAL.Context
                     LastName = "Petrov",
                     UserName = "SPetrov",
                     Password = "test6",
-                    Role = "Employee"
+                    Role = "Employee",
+                    EmployType = 1,
+                    Rate=4000,
+                    WorkingYears = 3
                 },
                 new UserInfo
                 {
@@ -108,7 +144,10 @@ namespace DAL.Context
                     LastName = "Ivanov",
                     UserName = "OIvanov",
                     Password = "test7",
-                    Role = "Employee"
+                    Role = "Employee",
+                    EmployType = 1,
+                    Rate=3000,
+                    WorkingYears = 0
                 }
             };
             foreach (var user in users)
@@ -119,7 +158,11 @@ namespace DAL.Context
                     {
                         UserName = user.UserName,
                         FirstName = user.FirstName,
-                        LastName = user.LastName
+                        LastName = user.LastName,
+                        TypeId = user.EmployType,
+                        BasicRate = user.Rate,
+                        EmploymentDate = DateTime.Now.AddYears(-user.WorkingYears)
+
                     };
 
                     IdentityResult result = userManager.CreateAsync(us, user.Password.CreateMd5()).Result;
@@ -128,8 +171,20 @@ namespace DAL.Context
                 }
             }
 
-
-
+            var manager1 = context.Employees.Single(p => p.UserName == "superUser");
+            var manager2 = context.Employees.Single(p => p.UserName == "Petrov");
+            var sales1 = context.Employees.Single(p => p.UserName == "Sidor");
+            var sales2 = context.Employees.Single(p => p.UserName == "Olegov");
+            var emp1 = context.Employees.Single(p => p.UserName == "ISidor");
+            var emp2 = context.Employees.Single(p => p.UserName == "SPetrov");
+            var emp3 = context.Employees.Single(p => p.UserName == "OIvanov");
+            emp3.BossId = sales2.Id;
+            manager2.BossId = sales2.Id;
+            sales2.BossId = manager1.Id;
+            emp1.BossId = manager2.Id;
+            emp2.BossId = manager1.Id;
+            sales1.BossId = sales2.Id;
+            context.Commit().Wait();
         }
     }
 }

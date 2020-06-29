@@ -23,6 +23,7 @@ namespace DAL.Context
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeeType> EmployeeTypes { get; set; }
 
         public async Task Commit()
         {

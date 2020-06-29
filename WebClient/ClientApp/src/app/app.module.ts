@@ -9,7 +9,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from "./app.component";
 import { routs, toastrSettings, jwtSettings, AUTH_API_URL  } from "."
-import { HomeComponent, CounterComponent, FetchDataComponent, NavMenuComponent, LoginComponent, LoginMenuComponent  } from "./components"
+import { HomeComponent, NavMenuComponent, LoginComponent, LoginMenuComponent  } from "./components"
 import { AuthInterceptor, ErrorInterceptor  } from "./classes"
 import { environment } from "../environments/environment";
 
@@ -19,8 +19,6 @@ import { environment } from "../environments/environment";
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     LoginComponent,
     LoginMenuComponent 
 

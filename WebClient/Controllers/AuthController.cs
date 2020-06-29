@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DTO.Auth;
-using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Employment;
@@ -19,9 +17,9 @@ namespace WebClient.Controllers
 
         public AuthController(IAuthService authService)
         {
-
             _authService = authService;
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Post([FromBody] LoginDataDto request)
         {
@@ -37,6 +35,5 @@ namespace WebClient.Controllers
         {
             return await _authService.GetCurrentUser(this.User);
         }
-
     }
 }
