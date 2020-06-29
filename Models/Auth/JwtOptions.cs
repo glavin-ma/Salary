@@ -13,7 +13,7 @@ namespace Models.Auth
         public DateTime NotBefore => DateTime.UtcNow;
         public DateTime Expiration => DateTime.UtcNow.AddMinutes(LifeTime);
         public TimeSpan ValidFor => TimeSpan.FromMinutes(LifeTime);
-        public SigningCredentials SigningCredentials => new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret)), SecurityAlgorithms.HmacSha256);
+        public SigningCredentials SigningCredentials => new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
 
 
         public SymmetricSecurityKey GetSymmetricSecurityKey()

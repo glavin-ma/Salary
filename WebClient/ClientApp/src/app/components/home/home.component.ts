@@ -7,7 +7,6 @@ import { MessageService } from "../../services";
 })
 export class HomeComponent {
   constructor(private service: MessageService) {
-    service.showError("Test Message");
   }
 
 }

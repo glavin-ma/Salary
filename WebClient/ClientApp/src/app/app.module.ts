@@ -5,11 +5,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from "./app.component";
-import { routs, toastrSettings  } from "."
-import { HomeComponent, CounterComponent, FetchDataComponent, NavMenuComponent, LoginComponent  } from "./components"
+import { routs, toastrSettings, jwtSettings, AUTH_API_URL  } from "."
+import { HomeComponent, CounterComponent, FetchDataComponent, NavMenuComponent, LoginComponent, LoginMenuComponent  } from "./components"
 import { AuthInterceptor, ErrorInterceptor  } from "./classes"
+import { environment } from "../environments/environment";
+
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { AuthInterceptor, ErrorInterceptor  } from "./classes"
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    LoginComponent
+    LoginComponent,
+    LoginMenuComponent 
 
   ],
   imports: [
@@ -28,11 +32,13 @@ import { AuthInterceptor, ErrorInterceptor  } from "./classes"
     BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routs),
-    ToastrModule.forRoot(toastrSettings)
+    ToastrModule.forRoot(toastrSettings),
+    JwtModule.forRoot(jwtSettings)
   ],
   providers: [
+    { provide: AUTH_API_URL, useValue: environment.authApi },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

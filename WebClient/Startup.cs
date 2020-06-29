@@ -1,6 +1,8 @@
+using System;
 using AutoMapper;
 using DAL.Context;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Models.Auth;
 using Models.Employment;
 using WebClient.Classes;
@@ -34,18 +37,44 @@ namespace WebClient
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 4;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+
             }).AddRoles<IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
             services.AddIdentityServer().AddApiAuthorization<Employee, DataContext>();
 
-            services.AddAuthentication().AddIdentityServerJwt();
+
+            var jwtOptions = Configuration.GetSection(nameof(JwtOptions));
+            var jwt = Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+            services.Configure<JwtOptions>(jwtOptions);
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwt.Issuer,
+
+                ValidateAudience = true,
+                ValidAudience = jwt.Audience,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = jwt.GetSymmetricSecurityKey(),
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(configureOptions =>
+            {
+                configureOptions.ClaimsIssuer = jwt.Issuer;
+                configureOptions.RequireHttpsMetadata = false;
+                configureOptions.TokenValidationParameters = tokenValidationParameters;
+                configureOptions.SaveToken = true;
+            });
+            
             services.AddControllers(p => p.Filters.Add(new ExceptionFilter()));
 
-            var jwtOptions = Configuration.GetSection("JwtOptions");
-            services.Configure<JwtOptions>(jwtOptions);
+            
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -84,7 +113,7 @@ namespace WebClient
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseIdentityServer();
+            //app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

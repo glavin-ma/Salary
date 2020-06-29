@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { Md5 } from 'ts-md5/dist/md5';
 
 import { AuthService, MessageService } from '../../services';
 
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    this.authenticationService.logout();
+    //this.authenticationService.logout();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService.login(this.f.username.value, this.f.password.value)
+
+    this.authenticationService.login(this.f.username.value, Md5.hashStr(this.f.password.value).toString() )
       .pipe(first())
       .subscribe(
         data => {

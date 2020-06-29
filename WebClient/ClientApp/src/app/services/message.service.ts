@@ -6,12 +6,12 @@ export class MessageService {
   constructor(private toastr: ToastrService) { }
 
 
-  public showError(message: string): void {
-    this.toastr.error(message, 'Error !!!');
+  public showError(message: string, header: string = 'Error !!!'): void {
+    this.toastr.error(message, header);
   }
 
   public showSuccess(message: string): void {
-    this.toastr.error(message, 'Success.');
+    this.toastr.success(message, 'Success.');
   }
 
 }

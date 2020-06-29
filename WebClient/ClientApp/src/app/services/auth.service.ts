@@ -1,24 +1,43 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Token } from "../models";
+import { AUTH_API_URL } from "../app.injection.tokens";
+import { User } from "../models";
+
+export const ACCESS_TOKEN_KEY = "access_token";
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject(AUTH_API_URL) private apiUrl: string, private jwtHelper: JwtHelperService, private router: Router) { }
 
-  login(username: string, password: string) {
-    return this.http.post<any>(`api/auth/login`, { username, password })
-      .pipe(map(user => {
-        if (user) {
-          user.authdata = window.btoa(username + ':' + password);
-          localStorage.setItem('currentUser', JSON.stringify(user));
-        }
+  login(username: string, password: string): Observable<Token> {
+    return this.http.post<Token>(`${this.apiUrl}api/auth/login`, { username, password })
+      .pipe(tap(token => { localStorage.setItem(ACCESS_TOKEN_KEY, token.accessToken); }));
+  }
 
-        return user;
-      }));
+  isAuthenticated(): boolean {
+    var token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    return token && !this.jwtHelper.isTokenExpired(token);
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    window.location.reload();
+  }
+
+  getUser(): User {
+    var token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (token == null) return null;
+    let userJson = this.jwtHelper.decodeToken(token);
+    let user = new User();
+    user.userName = userJson.sub;
+    user.roles = userJson.role;
+    return user;
   }
 }

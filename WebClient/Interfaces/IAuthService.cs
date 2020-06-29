@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using Models.Auth;
-using Newtonsoft.Json;
+using DTO.Auth;
+
+using Models.Employment;
+
 
 namespace WebClient.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> GenerateJwt(ClaimsIdentity identity, string userName, JsonSerializerSettings serializerSettings);
-        Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password);
-        ClaimsIdentity GenerateClaimsIdentity(string userName, string id);
+        Task<Employee> CheckCredentials(LoginDataDto request);
+        Task<string> GenerateEncodedToken(LoginDataDto request, Employee user);
+        Task<Employee> GetCurrentUser(ClaimsPrincipal currentUser);
     }
 }
