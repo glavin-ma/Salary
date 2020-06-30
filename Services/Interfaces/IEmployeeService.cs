@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Models.Employment;
 
@@ -8,5 +9,6 @@ namespace Services.Interfaces
     {
         Task<IEnumerable<Employee>> GetEmployees();
         Task<Employee> GetEmployee(string employeeId);
+        IEnumerable<Employee> CalculateSalary(DateTime date);
     }
 }

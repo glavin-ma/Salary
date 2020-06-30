@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { User } from "../../models";
 import { AuthService } from "../../services";
 
@@ -6,7 +6,7 @@ import { AuthService } from "../../services";
   selector: 'login-menu',
   templateUrl: 'login-menu.component.html'
 })
-export class LoginMenuComponent implements OnInit, OnChanges {
+export class LoginMenuComponent implements OnInit {
   user: User;
   userName: string;
   constructor(private auth: AuthService) {
@@ -14,11 +14,11 @@ export class LoginMenuComponent implements OnInit, OnChanges {
   }
   ngOnInit() {
     this.getUserInfo();
+    this.auth.getLoginDispatcher().subscribe(() => {
+      this.getUserInfo();
+    });
   }
 
-  ngOnChanges() {
-    this.getUserInfo();
-  }
 
   isAuthenticated(): boolean { return this.auth.isAuthenticated() };
 

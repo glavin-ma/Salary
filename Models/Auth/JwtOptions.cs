@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Models.Auth
 {
@@ -12,16 +10,5 @@ namespace Models.Auth
         public double LifeTime { get; set; }
         public DateTime NotBefore => DateTime.UtcNow;
         public DateTime Expiration => DateTime.UtcNow.AddMinutes(LifeTime);
-        public TimeSpan ValidFor => TimeSpan.FromMinutes(LifeTime);
-        public SigningCredentials SigningCredentials => new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
-
-
-        public SymmetricSecurityKey GetSymmetricSecurityKey()
-        {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
-        }
     }
-        //public DateTime NotBefore => DateTime.UtcNow;
-        //public DateTime IssuedAt => DateTime.UtcNow;
-    
 }

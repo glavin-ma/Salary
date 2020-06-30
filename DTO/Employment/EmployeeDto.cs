@@ -2,7 +2,8 @@
 {
     public class EmployeeDto
     {
-        public string FullName { get;set; }
-        public string Salary { get;set; }
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public double Salary { get; set; }
     }
 }

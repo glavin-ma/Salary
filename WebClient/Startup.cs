@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Models.Auth;
 using Models.Employment;
+using Services.Classes;
 using Services.Interfaces;
 using Services.Services;
 using WebClient.Classes;
@@ -61,7 +62,7 @@ namespace WebClient
                 ValidAudience = jwt.Audience,
 
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = jwt.GetSymmetricSecurityKey(),
+                IssuerSigningKey = jwt.GetSecurityKey(),
                 RequireExpirationTime = false,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero

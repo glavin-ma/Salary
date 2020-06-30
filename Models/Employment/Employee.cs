@@ -20,6 +20,6 @@ namespace Models.Employment
         public EmployeeType Type { get; set; }
         [ForeignKey("BossId")]
         public Employee Boss { get; set; }
-        public ICollection<Employee> Dependant { get; set; }
+        public ICollection<Employee> Dependants { get; set; }
     }
 }

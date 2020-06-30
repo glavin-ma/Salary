@@ -13,7 +13,6 @@ namespace Models.Employment
         }
         public double YearAllowance { get; set; }
         public double MaxAllowance { get; set; }
-
-        public ICollection<Employee> Employees { get; set; }
+        public double DependantsAllowance { get; set; }
     }
 }

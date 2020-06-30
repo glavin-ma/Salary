@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Employment;
 using Services.Classes;
 
@@ -8,13 +6,16 @@ namespace Services.Calculation
 {
     public class EmployeeCalculator : AbstractCalculator
     {
-        public EmployeeCalculator(Employee emp) : base(emp)
+        public EmployeeCalculator(CalculatorData calcData) : base(calcData)
         {
 
         }
-        public override double CalculateSalary(DateTime date)
+        public override double CalculateSalary()
         {
-            return Emp.BasicRate + Emp.CalculateAllowance(date);
+            var salary = CalcData.Employee.BasicRate + CalcData.Employee.CalculateAllowance(CalcData.CalculationDate);
+            CalcData.Employee.Salary = salary;
+            CalcData.EmpSalaries.Add(CalcData.Employee);
+            return salary;
         }
     }
 }

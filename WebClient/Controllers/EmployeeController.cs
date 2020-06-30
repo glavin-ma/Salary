@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DTO.Employment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.Classes;
 using Services.Interfaces;
 
 namespace WebClient.Controllers
@@ -21,11 +20,21 @@ namespace WebClient.Controllers
             EmpService = empService;
             Mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IEnumerable<EmployeeDto>> Get()
         {
             var data= await EmpService.GetEmployees();
-            var k = data.First().CalculateAllowance(DateTime.Now);
             return Mapper.Map<IEnumerable<EmployeeDto>>(data);
-        } 
+        }
+
+        [Authorize]
+        [HttpGet("calculate")]
+        public IEnumerable<EmployeeDto> Get(DateTime date)
+        {
+            var data = EmpService.CalculateSalary(date);
+
+            return Mapper.Map<IEnumerable<EmployeeDto>>(data);
+        }
     }
 }

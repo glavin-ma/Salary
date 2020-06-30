@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
@@ -14,11 +14,17 @@ export const ACCESS_TOKEN_KEY = "access_token";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
+  loginDispatcher: EventEmitter<any> = new EventEmitter();
+
   constructor(private http: HttpClient, @Inject(AUTH_API_URL) private apiUrl: string, private jwtHelper: JwtHelperService, private router: Router) { }
 
   login(username: string, password: string): Observable<Token> {
     return this.http.post<Token>(`${this.apiUrl}api/auth/login`, { username, password })
-      .pipe(tap(token => { localStorage.setItem(ACCESS_TOKEN_KEY, token.accessToken); }));
+      .pipe(tap(token => {
+        localStorage.setItem(ACCESS_TOKEN_KEY, token.accessToken);
+        this.loginDispatcher.emit();
+      }));
   }
 
   isAuthenticated(): boolean {
@@ -28,7 +34,12 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    window.location.reload();
+    this.loginDispatcher.emit();
+    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+  }
+
+  getLoginDispatcher(): EventEmitter<any> {
+    return this.loginDispatcher;
   }
 
   getUser(): User {

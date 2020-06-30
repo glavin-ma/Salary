@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using DAL.Classes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +12,7 @@ namespace DAL.Context
     {
         public static void Initialize(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasMany(p => p.Dependant)
-                .WithOne(p => p.Boss).IsRequired(false);
-            //modelBuilder.Entity<Employee>().HasOne(p => p.Type).WithMany(p => p.Employees).IsRequired();
+            modelBuilder.Entity<Employee>().HasMany(p => p.Dependants).WithOne(p => p.Boss).IsRequired(false);
 
             modelBuilder.Entity<EmployeeType>().HasData(
                 new EmployeeType
@@ -23,39 +20,27 @@ namespace DAL.Context
                     Id = 1,
                     Name = "Employee",
                     YearAllowance = 3,
-                    MaxAllowance = 30
+                    MaxAllowance = 30,
+                    DependantsAllowance = 0
                 },
                 new EmployeeType
                 {
                     Id = 2,
                     Name = "Manager",
                     YearAllowance = 5,
-                    MaxAllowance = 40
+                    MaxAllowance = 40,
+                    DependantsAllowance = 0.5
                 },
                 new EmployeeType
                 {
                     Id = 3,
                     Name = "Salesman",
                     YearAllowance = 1,
-                    MaxAllowance = 35
+                    MaxAllowance = 35,
+                    DependantsAllowance = 0.3
                 }
             );
         }
-
-        private class UserInfo
-        {
-            public string UserName { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Password { get; set; }
-            public string Role { get; set; }
-            public int EmployType { get; set; }
-            public double Rate { get; set; }
-            public int WorkingYears { get; set; }
-        }
-
-
-
         public static void Initialize(UserManager<Employee> userManager, IDataContext context, RoleManager<IdentityRole> roleManager)
         {
             if (!roleManager.RoleExistsAsync("Manager").Result)

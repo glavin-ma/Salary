@@ -1,20 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Models.Employment;
 using Services.Classes;
 
 namespace Services.Calculation
 {
-    class SalesmanCalculator : AbstractCalculator
+    public class SalesmanCalculator : AbstractCalculator
     {
-        public SalesmanCalculator(Employee emp) : base(emp)
+        public SalesmanCalculator(CalculatorData calcData) : base(calcData)
         {
 
         }
-        public override double CalculateSalary(DateTime date)
+        public override double CalculateSalary()
         {
-            return Emp.BasicRate + Emp.CalculateAllowance(date);
+            var check = CalculationHelper.HaveCircularDependency(CalcData.Employee.Id, CalcData.Employee.Dependants);
+            if (check) throw new HandledException("Circular dependency error.");
+            double dependantsSum = 0;
+            if (CalcData.Employee.Dependants != null)
+                foreach (var emp in CalcData.Employee.Dependants)
+                {
+                    var item = CalcData.EmpSalaries.SingleOrDefault(p => p.Id == emp.Id);
+                    if (item != null)
+                    {
+                        dependantsSum += item.Salary;
+                        continue;
+                    }
+                    var data = new CalculatorData
+                    {
+                        CalculationDate = CalcData.CalculationDate,
+                        Employee = emp,
+                        EmpSalaries = CalcData.EmpSalaries,
+                        Recursively = true
+                    };
+                    var calculator = CalculationHelper.FactoryCalculator(data);
+                    dependantsSum += calculator.CalculateSalary();
+                }
+
+            double salary = CalcData.Employee.BasicRate + CalcData.Employee.CalculateAllowance(CalcData.CalculationDate) +  dependantsSum * CalcData.Employee.Type.DependantsAllowance / 100;
+            CalcData.Employee.Salary = salary;
+            CalcData.EmpSalaries.Add(CalcData.Employee);
+            return CalcData.Recursively ? salary + dependantsSum : salary;
         }
     }
 }

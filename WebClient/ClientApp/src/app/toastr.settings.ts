@@ -1,4 +1,4 @@
 export const toastrSettings = {
-  timeOut: 3000,
+  timeOut: 4000,
   positionClass: 'toast-top-right',
 };

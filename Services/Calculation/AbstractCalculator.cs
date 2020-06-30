@@ -7,11 +7,11 @@ namespace Services.Calculation
 {
     public abstract class AbstractCalculator
     {
-        protected Employee Emp;
-        protected AbstractCalculator(Employee emp)
+        protected CalculatorData CalcData;
+        protected AbstractCalculator(CalculatorData calcData)
         {
-            Emp = emp;
+            CalcData = calcData;
         }
-        public abstract double CalculateSalary(DateTime date);
+        public abstract double CalculateSalary();
     }
 }
