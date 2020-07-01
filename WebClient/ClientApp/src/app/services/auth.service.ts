@@ -47,8 +47,12 @@ export class AuthService {
     if (token == null) return null;
     let userJson = this.jwtHelper.decodeToken(token);
     let user = new User();
+    user.roles = [];
     user.userName = userJson.sub;
-    user.roles = userJson.role;
+    if (Array.isArray(userJson.role))
+      user.roles = userJson.role;
+    else
+      user.roles.push(userJson.role);
     return user;
   }
 }
