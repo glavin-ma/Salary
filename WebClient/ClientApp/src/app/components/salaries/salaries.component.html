@@ -1,0 +1,29 @@
+<div class="form-inline">
+  <div class="form-group">
+    <label class="mr-2">Calculate Salary For:</label>
+    <mat-form-field class="mr-2">
+      <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button class="btn btn-primary" (click)="calculate()" [attr.disabled]="selectedDate == undefined? true:null">Calculate</button>
+  </div>
+</div>
+
+<table class="table" *ngIf="employees!=undefined">
+  <tr scope="row" *ngFor="let emp of employees">
+    <td>
+      {{emp.fullName}}
+    </td>
+    <td>
+      {{emp.salary | number:'.0-2'}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Total:
+    </td>
+    <td>{{getTotal(employees) | number:'.0-2'}}</td>
+  </tr>
+</table>
+

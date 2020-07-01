@@ -146,7 +146,7 @@ namespace DAL.Context
                         LastName = user.LastName,
                         TypeId = user.EmployType,
                         BasicRate = user.Rate,
-                        EmploymentDate = DateTime.Now.AddYears(-user.WorkingYears)
+                        EmploymentDate = DateTime.Now.AddYears(-user.WorkingYears).AddDays(-15)
 
                     };
 

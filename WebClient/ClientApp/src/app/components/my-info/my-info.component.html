@@ -1,0 +1,64 @@
+<table class="table">
+  <tr scope="row">
+    <td>
+      Username:
+    </td>
+    <td>
+      {{employee.userName}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Full Name:
+    </td>
+    <td>
+      {{employee.fullName}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Employee Type:
+    </td>
+    <td>
+      {{employee.type}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Basic Rate:
+    </td>
+    <td>
+      {{employee.basicRate | number:'.0-2'}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Employment Date:
+    </td>
+    <td>
+      {{employee.employmentDate | date: 'dd/MM/yyyy'}}
+    </td>
+  </tr>
+  <tr scope="row">
+    <td>
+      Current Salary:
+    </td>
+    <td>
+      {{employee.salary | number:'.0-2' }}
+    </td>
+  </tr>
+</table>
+
+<label>Dependants</label>
+
+<table class="table">
+  <tr *ngFor="let item of employee.dependants" scope="row">
+    <td>
+      Full Name:
+    </td>
+    <td>
+      {{item.fullName}}
+    </td>
+  </tr>
+</table>
+

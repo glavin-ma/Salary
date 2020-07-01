@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Models.Employment;
 using Services.Classes;
 
@@ -13,6 +12,7 @@ namespace Services.Calculation
             var check = CalculationHelper.HaveCircularDependency(CalcData.Employee.Id, CalcData.Employee.Dependants);
             if (check) throw new HandledException("Circular dependency error.");
             double dependantsSum = 0;
+            double dependantsSumRec = 0;
             if (CalcData.Employee.Dependants != null)
                 foreach (var emp in CalcData.Employee.Dependants)
                 {
@@ -30,13 +30,14 @@ namespace Services.Calculation
                         Recursively = CalcData.Recursively
                     };
                     var calculator = CalculationHelper.FactoryCalculator(data);
-                    dependantsSum += calculator.CalculateSalary();
+                    dependantsSumRec += calculator.CalculateSalary();
+                    dependantsSum += data.EmpSalaries.Single(p => p.Id == emp.Id).Salary;
                 }
 
             double salary = CalcData.Employee.BasicRate + CalcData.Employee.CalculateAllowance(CalcData.CalculationDate) + dependantsSum * CalcData.Employee.Type.DependantsAllowance / 100;
-            CalcData.Employee.Salary = salary;
+            CalcData.Employee.Salary = NotAvailableSalary() ? 0 : salary;
             CalcData.EmpSalaries.Add(CalcData.Employee);
-            return CalcData.Recursively ? salary + dependantsSum : salary;
+            return CalcData.Recursively ? salary + dependantsSumRec : salary;
         }
     }
 }

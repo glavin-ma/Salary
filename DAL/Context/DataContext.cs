@@ -13,7 +13,9 @@ namespace DAL.Context
         public DataContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=../DAL/database/salary.db", options => options.MigrationsAssembly("DAL"));
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlite("Data Source=../DAL/database/salary.db", options => options.MigrationsAssembly("DAL"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

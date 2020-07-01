@@ -13,5 +13,10 @@ namespace Services.Calculation
             CalcData = calcData;
         }
         public abstract double CalculateSalary();
+
+        protected bool NotAvailableSalary()
+        {
+            return CalcData.CalculationDate < CalcData.Employee.EmploymentDate;
+        }
     }
 }

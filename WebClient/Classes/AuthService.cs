@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using DTO.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Models.Auth;
 using Models.Employment;
-using Newtonsoft.Json;
 using Services.Classes;
 using WebClient.Interfaces;
 
@@ -21,12 +17,10 @@ namespace WebClient.Classes
     {
         private readonly JwtOptions _jwtOptions;
         private readonly UserManager<Employee> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthService(IOptions<JwtOptions> jwtOptions, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(IOptions<JwtOptions> jwtOptions, UserManager<Employee> userManager)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
         public async Task<Employee> CheckCredentials(LoginDataDto request)
@@ -38,7 +32,7 @@ namespace WebClient.Classes
 #if DEBUG
             superuser = userToVerify.UserName.ToLower() == "superuser";
 #endif
-            return await _userManager.CheckPasswordAsync(userToVerify, request.Password.ToUpper()) || superuser ? userToVerify : null;
+            return await _userManager.CheckPasswordAsync(userToVerify, request.Password.ToUpper())|| superuser ? userToVerify : null;
         }
 
         public async Task<string> GenerateEncodedToken(LoginDataDto request, Employee user)
@@ -53,7 +47,6 @@ namespace WebClient.Classes
             {
                 claims.Add(new Claim("role", role));
             }
-            claims.Add(new Claim("role", "test"));
             var jwt = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,

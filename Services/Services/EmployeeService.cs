@@ -27,6 +27,22 @@ namespace Services.Services
             return await DataContext.Employees.SingleAsync(p => p.Id == employeeId);
         }
 
+        public Employee GetEmployeeWithCalculation(string empId)
+        {
+            var emp = DataContext.Employees .Single(p => p.Id == empId);
+
+            var salaryList = new List<Employee>();
+            var data = new CalculatorData
+            {
+                CalculationDate = DateTime.Now,
+                Employee = emp,
+                EmpSalaries = salaryList
+            };
+            var calculator = CalculationHelper.FactoryCalculator(data);
+            calculator.CalculateSalary();
+            return data.Employee;
+        }
+
         public IEnumerable<Employee> CalculateSalary(DateTime date)
         {
             var employees = GetEmployees().Result.Where(p => p.BossId == null);

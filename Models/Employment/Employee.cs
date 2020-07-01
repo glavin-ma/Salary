@@ -17,9 +17,9 @@ namespace Models.Employment
         public double Salary { get; set; }
 
         [ForeignKey("TypeId")]
-        public EmployeeType Type { get; set; }
+        public virtual EmployeeType Type { get; set; }
         [ForeignKey("BossId")]
-        public Employee Boss { get; set; }
-        public ICollection<Employee> Dependants { get; set; }
+        public virtual Employee Boss { get; set; }
+        public virtual ICollection<Employee> Dependants { get; set; }
     }
 }

@@ -24,15 +24,14 @@ export class ErrorInterceptor implements HttpInterceptor {
         this.messageService.showError(errText, err.statusText);
       }
       if (err.status === 401) {
-        this.authService.logout();
-        location.reload(true);
+        //this.authService.logout();
+        //location.reload(true);
       }
       if (err.status === 500) {
         this.messageService.showError("Internal Server Error");
       }
-      const error = err.error.message || err.statusText;
-      console.log(error);
-      return throwError(error);
+      
+      return throwError(err);
     }));
   }
 }

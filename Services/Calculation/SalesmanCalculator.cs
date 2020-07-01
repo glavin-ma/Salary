@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Models.Employment;
 using Services.Classes;
 
@@ -37,7 +36,7 @@ namespace Services.Calculation
                 }
 
             double salary = CalcData.Employee.BasicRate + CalcData.Employee.CalculateAllowance(CalcData.CalculationDate) +  dependantsSum * CalcData.Employee.Type.DependantsAllowance / 100;
-            CalcData.Employee.Salary = salary;
+            CalcData.Employee.Salary = NotAvailableSalary() ? 0 : salary;
             CalcData.EmpSalaries.Add(CalcData.Employee);
             return CalcData.Recursively ? salary + dependantsSum : salary;
         }

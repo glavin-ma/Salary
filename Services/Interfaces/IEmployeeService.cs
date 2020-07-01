@@ -10,5 +10,6 @@ namespace Services.Interfaces
         Task<IEnumerable<Employee>> GetEmployees();
         Task<Employee> GetEmployee(string employeeId);
         IEnumerable<Employee> CalculateSalary(DateTime date);
+        Employee GetEmployeeWithCalculation(string userId);
     }
 }
